@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -27,12 +28,22 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(list);
     }
 
+    @GetMapping(value = "/{id}")
+    ResponseEntity<User> findOne(@PathVariable UUID id) {
+        var user = service.findOne(id);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
     @PostMapping
     ResponseEntity<User> insert(@RequestBody @Valid UserDto model) {
         var user = service.insert(model);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
-
+    @PutMapping(value = "/{id}")
+    ResponseEntity<User> update(@PathVariable UUID id, @RequestBody @Valid UserDto model ) {
+        var user = service.update(id, model);
+        return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
 
 }

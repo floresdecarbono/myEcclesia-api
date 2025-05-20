@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -20,10 +21,20 @@ public class UserService {
         return repository.findAll();
     }
 
+    public User findOne(UUID id) {
+        return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("User with ID " + id + " doesn't exist."));
+    }
+
     public User insert(@Valid UserDto model) {
         var user = new User();
         updateData(model, user);
 
+        return repository.save(user);
+    }
+
+    public User update(UUID id, @Valid UserDto model) {
+        var user = repository.findById(id).get();
+        updateData(model, user);
         return repository.save(user);
     }
 
