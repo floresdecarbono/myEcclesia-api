@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -44,6 +42,12 @@ public class UserController {
     ResponseEntity<User> update(@PathVariable UUID id, @RequestBody @Valid UserDto model ) {
         var user = service.update(id, model);
         return ResponseEntity.status(HttpStatus.OK).body(user);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    ResponseEntity<Void> delete(@PathVariable UUID id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

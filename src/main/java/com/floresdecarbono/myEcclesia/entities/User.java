@@ -1,5 +1,6 @@
 package com.floresdecarbono.myEcclesia.entities;
 
+import com.floresdecarbono.myEcclesia.entities.enums.Cargo;
 import jakarta.persistence.*;
 
 import java.io.Serial;
@@ -21,14 +22,17 @@ public class User implements Serializable {
     private String email;
     private String password;
 
+    private Integer cargo;
+
     public User() {}
 
-    public User(UUID id, String username, String cpf, String email, String password) {
+    public User(UUID id, String username, String cpf, String email, String password, Cargo cargo) {
         this.id = id;
         this.username = username;
         this.cpf = cpf;
         this.email = email;
         this.password = password;
+        setCargo(cargo);
     }
 
     public UUID getId() {
@@ -69,6 +73,14 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Cargo getCargo() {
+        return Cargo.valueOf(cargo);
+    }
+
+    public void setCargo(Cargo cargo) {
+        this.cargo = cargo.getCode();
     }
 
     @Override

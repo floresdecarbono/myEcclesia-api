@@ -2,6 +2,7 @@ package com.floresdecarbono.myEcclesia.services;
 
 import com.floresdecarbono.myEcclesia.entities.User;
 import com.floresdecarbono.myEcclesia.entities.dtos.UserDto;
+import com.floresdecarbono.myEcclesia.entities.enums.Cargo;
 import com.floresdecarbono.myEcclesia.repositories.UserRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -38,11 +39,16 @@ public class UserService {
         return repository.save(user);
     }
 
+    public void delete(UUID id) {
+        repository.deleteById(id);
+    }
+
     private void updateData(@Valid UserDto source, @NotNull User destination) {
         destination.setUsername(source.username());
         destination.setCpf(source.cpf());
         destination.setEmail(source.email());
         destination.setPassword(source.password());
+        destination.setCargo(Cargo.valueOf(source.cargo()));
     }
 
 }
