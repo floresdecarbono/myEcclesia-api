@@ -3,6 +3,7 @@ package com.floresdecarbono.myEcclesia.services;
 import com.floresdecarbono.myEcclesia.entities.User;
 import com.floresdecarbono.myEcclesia.entities.dtos.UserDto;
 import com.floresdecarbono.myEcclesia.entities.enums.Cargo;
+import com.floresdecarbono.myEcclesia.exceptions.ResourceNotFoundException;
 import com.floresdecarbono.myEcclesia.repositories.UserRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -23,7 +24,8 @@ public class UserService {
     }
 
     public User findOne(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("User with ID " + id + " doesn't exist."));
+        var user = repository.findById(id);
+        return user.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public User insert(@Valid UserDto model) {
@@ -34,12 +36,13 @@ public class UserService {
     }
 
     public User update(UUID id, @Valid UserDto model) {
-        var user = repository.findById(id).get();
+        var user = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
         updateData(model, user);
         return repository.save(user);
     }
 
     public void delete(UUID id) {
+        if (!repository.existsById(id)) throw new ResourceNotFoundException(id);
         repository.deleteById(id);
     }
 
