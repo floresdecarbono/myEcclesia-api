@@ -1,11 +1,14 @@
 package com.floresdecarbono.myEcclesia.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.floresdecarbono.myEcclesia.entities.enums.Cargo;
 import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -23,6 +26,10 @@ public class User implements Serializable {
     private String password;
 
     private Integer cargo;
+
+    @OneToMany
+    @JsonIgnore
+    private Set<Departamento> departamentos = new HashSet<>();
 
     public User() {}
 
@@ -81,6 +88,10 @@ public class User implements Serializable {
 
     public void setCargo(Cargo cargo) {
         this.cargo = cargo.getCode();
+    }
+
+    public Set<Departamento> getDepartamentos() {
+        return departamentos;
     }
 
     @Override
