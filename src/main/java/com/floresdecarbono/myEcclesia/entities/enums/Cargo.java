@@ -11,7 +11,7 @@ public enum Cargo {
 
     private final int code;
 
-    private Cargo(int code) {
+    Cargo(int code) {
         this.code = code;
     }
 

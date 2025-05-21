@@ -33,7 +33,5 @@ public class DevConfig implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
 
-
-
     }
 }
