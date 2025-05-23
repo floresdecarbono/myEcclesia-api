@@ -4,26 +4,34 @@ import com.floresdecarbono.myEcclesia.entities.Departamento;
 import com.floresdecarbono.myEcclesia.entities.dtos.DepartamentoDto;
 import com.floresdecarbono.myEcclesia.exceptions.ResourceNotFoundException;
 import com.floresdecarbono.myEcclesia.repositories.DepartamentoRepository;
+import com.floresdecarbono.myEcclesia.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class DepartamentoService implements GenericService<Departamento, DepartamentoDto, UUID> {
 
-    @Autowired
-    private DepartamentoRepository repository;
+    private final DepartamentoRepository departamentoRepository;
+
+    private final UserRepository userRepository;
+
+    public DepartamentoService(DepartamentoRepository departamentoRepository, UserRepository userRepository) {
+        this.departamentoRepository = departamentoRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public List<Departamento> findAll() {
-        return repository.findAll();
+        return departamentoRepository.findAll();
     }
 
     @Override
     public Departamento findOne(UUID id) {
-        var obj = repository.findById(id);
+        var obj = departamentoRepository.findById(id);
         return obj.orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
@@ -31,26 +39,29 @@ public class DepartamentoService implements GenericService<Departamento, Departa
     public Departamento insert(DepartamentoDto model) {
         var obj = new Departamento();
         updateData(model, obj);
-        return repository.save(obj);
+        return departamentoRepository.save(obj);
     }
 
     @Override
     public Departamento update(UUID id, DepartamentoDto model) {
-        var obj = repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
+        var obj = departamentoRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
         updateData(model, obj);
-        return repository.save(obj);
+        return departamentoRepository.save(obj);
     }
 
     @Override
     public void delete(UUID id) {
-        if (!repository.existsById(id)) throw new ResourceNotFoundException(id);
-        repository.deleteById(id);
+        if (!departamentoRepository.existsById(id)) throw new ResourceNotFoundException(id);
+        departamentoRepository.deleteById(id);
     }
 
     @Override
     public void updateData(DepartamentoDto source, Departamento destination) {
         destination.setNome(source.nome());
-        destination.setLider(source.lider());
+        destination.setLider(userRepository.findById(source.liderId()).
+                orElseThrow(() -> new ResourceNotFoundException(source.liderId())));
+        destination.setMembros(new HashSet<>(
+                userRepository.findAllById(source.membrosIds())));
     }
 
 }

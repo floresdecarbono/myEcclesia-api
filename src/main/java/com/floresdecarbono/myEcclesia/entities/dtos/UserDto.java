@@ -1,6 +1,13 @@
 package com.floresdecarbono.myEcclesia.entities.dtos;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
-public record UserDto(@NotBlank String username, @NotBlank String cpf, @NotBlank String email, @NotBlank String password, @NotNull Integer cargo) {}
+import java.util.Set;
+import java.util.UUID;
+
+public record UserDto(String username,
+                      String cpf,
+                      String email,
+                      String password,
+                      Integer cargo,
+                      Set<UUID> liderandosIds,
+                      Set<UUID> escalasIds) {}

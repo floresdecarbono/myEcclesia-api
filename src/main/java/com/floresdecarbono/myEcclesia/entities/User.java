@@ -1,6 +1,6 @@
 package com.floresdecarbono.myEcclesia.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.floresdecarbono.myEcclesia.entities.enums.Cargo;
 import jakarta.persistence.*;
 
@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "TB_USER")
+@Table(name = "TB_USERS")
 public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -20,16 +20,25 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
+    @Column(nullable = false, unique = true)
     private String username;
+    @Column(nullable = false, unique = true)
     private String cpf;
+    @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
     private String password;
 
     private Integer cargo;
 
-    @OneToMany
-    @JsonIgnore
-    private Set<Departamento> departamentos = new HashSet<>();
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "lider", fetch = FetchType.LAZY)
+    private Set<Departamento> liderandos = new HashSet<>();
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToMany(mappedBy = "escalados", fetch = FetchType.LAZY)
+    private Set<Evento> escalas = new HashSet<>();
 
     public User() {}
 
@@ -90,8 +99,20 @@ public class User implements Serializable {
         this.cargo = cargo.getCode();
     }
 
-    public Set<Departamento> getDepartamentos() {
-        return departamentos;
+    public Set<Departamento> getLiderandos() {
+        return liderandos;
+    }
+
+    public void setLiderandos(Set<Departamento> liderandos) {
+        this.liderandos = liderandos;
+    }
+
+    public Set<Evento> getEscalas() {
+        return escalas;
+    }
+
+    public void setEscalas(Set<Evento> escalas) {
+        this.escalas = escalas;
     }
 
     @Override

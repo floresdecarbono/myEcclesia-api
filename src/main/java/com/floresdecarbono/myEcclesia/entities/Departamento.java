@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "TB_DEPARTAMENTO")
+@Table(name = "TB_DEPARTAMENTOS")
 public class Departamento implements Serializable {
 
     @Serial
@@ -20,9 +20,11 @@ public class Departamento implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @Column(nullable = false, unique = true)
     private String nome;
 
     @ManyToOne
+    @JoinColumn(name = "lider_id")
     private User lider;
 
     private Set<User> membros = new HashSet<>();
@@ -61,6 +63,10 @@ public class Departamento implements Serializable {
 
     public Set<User> getMembros() {
         return membros;
+    }
+
+    public void setMembros(Set<User> membros) {
+        this.membros = membros;
     }
 
     @Override

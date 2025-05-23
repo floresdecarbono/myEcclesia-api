@@ -1,9 +1,10 @@
 package com.floresdecarbono.myEcclesia.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.floresdecarbono.myEcclesia.entities.enums.TipoEvento;
 import jakarta.persistence.*;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -18,21 +19,27 @@ public class Evento {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
+    @Column(nullable = false, unique = true)
     private String nome;
-    private Instant dataInicio;
-    private Instant dataFinal;
+
+    @Column(nullable = false)
+    private LocalDateTime dataInicio;
+    @Column(nullable = false)
+    private LocalDateTime dataFinal;
 
     @OneToOne
     private Endereco local;
 
     private Integer tipo;
 
-    @OneToMany
-    private Set<User> envolvidos = new HashSet<>();
+    @ManyToMany
+    @JoinTable(name = "TB_ENVOLVIDOS_EVENTOS", joinColumns = @JoinColumn(name = "eventos_id"), inverseJoinColumns = @JoinColumn(name = "escalados_id"))
+    private Set<User> escalados = new HashSet<>();
 
     public Evento() {}
 
-    public Evento(UUID id, String nome, Instant dataInicio, Instant dataFinal, Endereco local, TipoEvento tipo) {
+    public Evento(UUID id, String nome, LocalDateTime dataInicio, LocalDateTime dataFinal, Endereco local, TipoEvento tipo) {
         this.id = id;
         this.nome = nome;
         this.dataInicio = dataInicio;
@@ -57,19 +64,19 @@ public class Evento {
         this.nome = nome;
     }
 
-    public Instant getDataInicio() {
+    public LocalDateTime getDataInicio() {
         return dataInicio;
     }
 
-    public void setDataInicio(Instant dataInicio) {
+    public void setDataInicio(LocalDateTime dataInicio) {
         this.dataInicio = dataInicio;
     }
 
-    public Instant getDataFinal() {
+    public LocalDateTime getDataFinal() {
         return dataFinal;
     }
 
-    public void setDataFinal(Instant dataFinal) {
+    public void setDataFinal(LocalDateTime dataFinal) {
         this.dataFinal = dataFinal;
     }
 
@@ -89,8 +96,12 @@ public class Evento {
         this.tipo = tipo.getCode();
     }
 
-    public Set<User> getEnvolvidos() {
-        return envolvidos;
+    public Set<User> getEscalados() {
+        return escalados;
+    }
+
+    public void setEscalados(Set<User> escalados) {
+        this.escalados = escalados;
     }
 
     @Override

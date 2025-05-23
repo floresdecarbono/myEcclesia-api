@@ -13,8 +13,11 @@ import java.util.UUID;
 @Service
 public class EnderecoService implements GenericService<Endereco, EnderecoDto, UUID> {
 
-    @Autowired
-    private EnderecoRepository repository;
+    private final EnderecoRepository repository;
+
+    public EnderecoService(EnderecoRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public List<Endereco> findAll() {

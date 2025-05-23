@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "TB_ENDERECO")
+@Table(name = "TB_ENDERECOS")
 public class Endereco implements Serializable {
 
     @Serial
@@ -18,12 +18,15 @@ public class Endereco implements Serializable {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(unique = true)
+    private String referencia;
+    @Column(nullable = false)
     private String cidade;
+    @Column(nullable = false)
     private String bairro;
+    @Column(nullable = false)
     private String rua;
     private String numero;
-    private String referencia;
-
     public Endereco() {}
 
     public Endereco(UUID id, String cidade, String bairro, String rua, String numero) {
@@ -34,12 +37,20 @@ public class Endereco implements Serializable {
         this.numero = numero;
     }
 
-    public Endereco(UUID id, String cidade, String bairro, String rua, String numero, String referencia) {
+    public Endereco(UUID id,  String referencia, String cidade, String bairro, String rua, String numero) {
+        this.referencia = referencia;
         this.id = id;
         this.cidade = cidade;
         this.bairro = bairro;
         this.rua = rua;
         this.numero = numero;
+    }
+
+    public String getReferencia() {
+        return referencia;
+    }
+
+    public void setReferencia(String referencia) {
         this.referencia = referencia;
     }
 
@@ -81,14 +92,6 @@ public class Endereco implements Serializable {
 
     public void setNumero(String numero) {
         this.numero = numero;
-    }
-
-    public String getReferencia() {
-        return referencia;
-    }
-
-    public void setReferencia(String referencia) {
-        this.referencia = referencia;
     }
 
     @Override
