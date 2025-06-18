@@ -3,6 +3,7 @@ package com.floresdecarbono.myEcclesia.entities;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.floresdecarbono.myEcclesia.entities.enums.Cargo;
 import jakarta.persistence.*;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,7 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "TB_USERS")
-public class User implements Serializable {
+public class User extends RepresentationModel<User> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 

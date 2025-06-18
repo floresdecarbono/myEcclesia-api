@@ -10,4 +10,6 @@ public record UserDto(String username,
                       String password,
                       Integer cargo,
                       Set<UUID> liderandosIds,
-                      Set<UUID> escalasIds) {}
+                      Set<UUID> escalasIds) {
+
+}

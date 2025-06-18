@@ -1,6 +1,8 @@
 package com.floresdecarbono.myEcclesia.services;
 
+import com.floresdecarbono.myEcclesia.controllers.UserController;
 import com.floresdecarbono.myEcclesia.entities.Departamento;
+import com.floresdecarbono.myEcclesia.entities.Evento;
 import com.floresdecarbono.myEcclesia.entities.User;
 import com.floresdecarbono.myEcclesia.entities.dtos.UserDto;
 import com.floresdecarbono.myEcclesia.entities.enums.Cargo;
@@ -8,11 +10,13 @@ import com.floresdecarbono.myEcclesia.exceptions.ResourceNotFoundException;
 import com.floresdecarbono.myEcclesia.repositories.DepartamentoRepository;
 import com.floresdecarbono.myEcclesia.repositories.EventoRepository;
 import com.floresdecarbono.myEcclesia.repositories.UserRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -38,8 +42,7 @@ public class UserService implements GenericService<User, UserDto, UUID> {
 
     @Override
     public User findOne(UUID id) {
-        var user = userRepository.findById(id);
-        return user.orElseThrow(() -> new ResourceNotFoundException(id));
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     @Override
@@ -51,6 +54,7 @@ public class UserService implements GenericService<User, UserDto, UUID> {
         user.setPassword(model.cpf());
         user.setCargo(Cargo.valueOf(model.cargo()));
 
+
         return userRepository.save(user);
     }
 
@@ -58,6 +62,7 @@ public class UserService implements GenericService<User, UserDto, UUID> {
     public User update(UUID id, UserDto model) {
         var user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
         updateData(model, user);
+
         return userRepository.save(user);
     }
 
@@ -80,4 +85,6 @@ public class UserService implements GenericService<User, UserDto, UUID> {
         destination.setEscalas(new HashSet<>(
                 eventoRepository.findAllById(source.escalasIds())));
     }
+
 }
+
